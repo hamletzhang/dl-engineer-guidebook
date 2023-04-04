@@ -131,6 +131,64 @@ pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 * https://pypi.doubanio.com/simple/
 * https://mirrors.ustc.edu.cn/pypi/web/simple/
 
+### 打包&分发 Python离线包
+
+#### 准备 Python
+
+首先去 Python 官网下载：[https://www.python.org/downloads/](https://www.python.org/downloads/)
+
+![image](https://user-images.githubusercontent.com/10473170/229679144-86d96c5c-58e0-4a54-9657-ccfe37943c6e.png)
+
+注意要下载 `Windows embeddable package (64-bit)` 离线包，我选择的是 [python-3.10.10-embed-amd64.zip](https://www.python.org/ftp/python/3.10.10/python-3.10.10-embed-amd64.zip)。
+
+![image](https://user-images.githubusercontent.com/10473170/229679189-1f8b2032-c92c-47ee-ba25-147f4acbf90f.png)
+
+解压到 `./system/python` 目录下。
+
+![image](https://user-images.githubusercontent.com/10473170/229679264-b3633920-757f-4ab8-b9f8-e79a21036146.png)
+
+#### 准备 get-pip.py
+
+去官网下载：[https://bootstrap.pypa.io/get-pip.py](https://bootstrap.pypa.io/get-pip.py)
+
+保存到 `./system/python` 目录下。
+
+#### ⚠️必做
+
+解压之后，记得删除 pth 文件，以解决安装依赖的问题。
+
+比如我删除的文件路径是 `./system/python/python310._pth`
+
+![image](https://user-images.githubusercontent.com/10473170/229679450-7acc005d-8203-4dd6-8be9-fa546aeaa2bf.png)
+
+#### 安装依赖
+
+运行 [setup_offline.bat](setup_offline.bat) 脚本，安装依赖。
+
+![image](https://user-images.githubusercontent.com/10473170/229679544-162b8db1-851f-47f0-af54-675c6a710b42.png)
+
+#### 下载离线模型
+
+你可以使用 [download_model.py](download_model.py) 脚本下载模型，如果你的网络环境不好，这个过程可能会很长。下载的模型会存在 `~/.cache` 一份，存在 `./models` 一份。
+
+当你之后使用 `AutoModel.from_pretrained` 加载模型时，可以从 `~/.cache` 缓存目录加载模型，避免二次下载。
+
+![image](https://user-images.githubusercontent.com/10473170/229679938-44486557-dbc7-4e0b-9793-acfb6c46459e.png)
+
+下载好的模型，你需要从 `./models` 文件夹移出到项目目录下，这样就可以离线加载了。
+
+![image](https://user-images.githubusercontent.com/10473170/229680125-6af06b25-3d26-49cc-969b-4f6154c522de.png)
+
+下载完模型之后，你需要修改 [app.py](app.py) 里的 `model_name`，改成你想加载的模型名称。
+
+#### 测试
+
+使用 [start_offline.bat](start_offline.bat) 启动服务：
+
+![image](https://user-images.githubusercontent.com/10473170/229680404-0b28dfd4-382e-4cfc-9392-997f134c0242.png)
+
+可以看到，服务正常启动。
+
 ## Python 库
 
 下面是我认为比较重要的 Python 库：
